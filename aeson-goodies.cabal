@@ -28,6 +28,7 @@ library
       Data.Aeson.Goodies.NumBool
       Data.Aeson.Goodies.StringInt
       Data.Aeson.Goodies.Util
+      Data.Aeson.Goodies.WithRawValue
   other-modules:
       Paths_aeson_goodies
   hs-source-dirs:
