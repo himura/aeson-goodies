@@ -19,7 +19,7 @@ newtype StringInt a =
     StringInt
         { unStringInt :: a
         }
-    deriving (Generic, Show, Eq, Ord, Bounded, Num, Enum, Real, Integral, Functor, Foldable, Traversable)
+    deriving (Generic, Show, Eq, Ord, Bounded, Num, Enum, Real, Integral, Functor, Foldable, Traversable, FromJSONKey)
 
 instance (Bounded a, Integral a) => FromJSON (StringInt a) where
     parseJSON = prependContext "StringInt" . p
