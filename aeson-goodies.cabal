@@ -25,8 +25,8 @@ source-repository head
 
 library
   exposed-modules:
+      Data.Aeson.Goodies.IntegralString
       Data.Aeson.Goodies.NumBool
-      Data.Aeson.Goodies.StringInt
       Data.Aeson.Goodies.Util
       Data.Aeson.Goodies.WithRawValue
   other-modules:
