@@ -9,6 +9,7 @@ import Data.Aeson.Types (FromJSON(parseJSON), ToJSON(toJSON), Value(Bool, Number
 import Data.Aeson.Goodies.Util (prependContext)
 import qualified Data.Text as T
 import GHC.Generics (Generic)
+import Control.DeepSeq (NFData)
 
 newtype NumBool =
     NumBool
@@ -32,3 +33,5 @@ instance FromJSON NumBool where
 
 instance ToJSON NumBool where
     toJSON (NumBool b) = Bool b
+
+instance NFData NumBool

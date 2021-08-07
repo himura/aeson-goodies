@@ -4,6 +4,7 @@ module Data.Aeson.Goodies.WithRawValue
     ( WithRawValue(..)
     ) where
 
+import Control.DeepSeq (NFData)
 import Data.Aeson (FromJSON(..), ToJSON(..), Value)
 import GHC.Generics (Generic)
 
@@ -15,3 +16,5 @@ instance FromJSON a => FromJSON (WithRawValue a) where
     parseJSON v = WithRawValue <$> parseJSON v <*> pure v
 instance ToJSON (WithRawValue a) where
     toJSON = toJSON . rawValue
+
+instance NFData a => NFData (WithRawValue a)

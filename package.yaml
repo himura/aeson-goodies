@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - aeson >= 1.5
 - attoparsec >= 0.13.2.2
+- deepseq
 - scientific >= 0.3.6.2
 - text >= 0.11
 

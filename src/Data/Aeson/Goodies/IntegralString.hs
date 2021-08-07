@@ -9,6 +9,7 @@ module Data.Aeson.Goodies.IntegralString
     , IntString
     ) where
 
+import Control.DeepSeq
 import Data.Aeson.Goodies.Util
 import Data.Aeson.Types hiding (Parser)
 import Data.Attoparsec.Text
@@ -53,6 +54,8 @@ instance (Bounded a, Integral a) => FromJSON (IntegralString a) where
 
 instance Show a => ToJSON (IntegralString a) where
     toJSON (IntegralString n) = String . T.pack . show $ n
+
+instance NFData a => NFData (IntegralString a)
 
 intParser :: Integral a => Parser a
 intParser = signed decimal
