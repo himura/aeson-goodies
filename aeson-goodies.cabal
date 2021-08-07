@@ -27,7 +27,7 @@ library
   exposed-modules:
       Data.Aeson.Goodies.IntegralString
       Data.Aeson.Goodies.NumBool
-      Data.Aeson.Goodies.SingletonObject
+      Data.Aeson.Goodies.SingleKeyObject
       Data.Aeson.Goodies.Util
       Data.Aeson.Goodies.WithRawValue
   other-modules:
