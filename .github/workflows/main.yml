@@ -15,8 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ghc: [ '8.8.4', '8.10.4', '9.0.1', 'latest' ]
+        ghc: [ '8.10.7', '9.0.2', '9.2.2', 'latest' ]
         cabal: [ 'latest' ]
+        constraint:
+        - "--constraint='aeson ==2.0.*'"
+        - "--constraint='aeson ^>=1.5'"
+        exclude:
+        - ghc: '9.2.2'
+          cabal: latest
+          constraint: "--constraint='aeson ^>=1.5'"
+        - ghc: latest
+          cabal: latest
+          constraint: "--constraint='aeson ^>=1.5'"
     steps:
     - uses: actions/checkout@v2
     - uses: haskell/actions/setup@v1
@@ -33,8 +43,8 @@ jobs:
     - name: Install dependencies
       run: |
         cabal v2-update
-        cabal v2-build all --only-dependencies --enable-tests
+        cabal v2-build all --only-dependencies --enable-tests ${{ matrix.constraint }}
     - name: Build
-      run: cabal v2-build all
+      run: cabal v2-build all ${{ matrix.constraint }}
     - name: Run tests
-      run: cabal v2-test all
+      run: cabal v2-test all ${{ matrix.constraint }}
