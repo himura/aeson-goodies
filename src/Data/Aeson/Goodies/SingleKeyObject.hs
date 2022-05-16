@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -26,8 +27,20 @@ import Data.Aeson
 import Data.Aeson.Encoding (pair)
 import Data.Proxy (Proxy(..))
 import GHC.Generics (Generic, Generic1)
-import qualified Data.Text as T
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
+#if MIN_VERSION_aeson(2, 0, 0)
+import qualified Data.Aeson.Key as AesonKey
+#else
+import qualified Data.Text as T
+#endif
+
+#if MIN_VERSION_aeson(2, 0, 0)
+keyFromSymbol :: forall n proxy. KnownSymbol n => proxy n -> AesonKey.Key
+keyFromSymbol = AesonKey.fromString . symbolVal
+#else
+keyFromSymbol :: forall n proxy. KnownSymbol n => proxy n -> T.Text
+keyFromSymbol = T.pack . symbolVal
+#endif
 
 newtype SingleKeyObject (s :: Symbol) a =
     SingleKeyObject
@@ -40,7 +53,7 @@ instance KnownSymbol s => FromJSON1 (SingleKeyObject s) where
         withObject ("SingleKeyObject \"" ++ keyStr ++ "\"") $ \obj -> SingleKeyObject <$> (obj .: key >>= p)
       where
         keyStr = symbolVal (Proxy :: Proxy s)
-        key = T.pack keyStr
+        key = keyFromSymbol (Proxy :: Proxy s)
 
 instance (KnownSymbol s, FromJSON a) => FromJSON (SingleKeyObject s a) where
     parseJSON = parseJSON1
@@ -48,10 +61,10 @@ instance (KnownSymbol s, FromJSON a) => FromJSON (SingleKeyObject s a) where
 instance KnownSymbol s => ToJSON1 (SingleKeyObject s) where
     liftToJSON to' _ (SingleKeyObject a) = object [key .= to' a]
       where
-        key = T.pack $ symbolVal (Proxy :: Proxy s)
+        key = keyFromSymbol (Proxy :: Proxy s)
     liftToEncoding to' _ (SingleKeyObject a) = pairs (pair key $ to' a)
       where
-        key = T.pack $ symbolVal (Proxy :: Proxy s)
+        key = keyFromSymbol (Proxy :: Proxy s)
 
 instance (KnownSymbol s, ToJSON a) => ToJSON (SingleKeyObject s a) where
     toJSON = toJSON1
