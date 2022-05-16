@@ -15,12 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ghc: [ '8.8.4', '8.10.4', '9.0.1', 'latest' ]
+        ghc: [ '8.10.7', '9.0.2', '9.2.2', 'latest' ]
         cabal: [ 'latest' ]
         constraint:
         - "--constraint='aeson ==2.0.*'"
         - "--constraint='aeson ^>=1.5'"
         exclude:
+        - ghc: '9.2.2'
+          cabal: latest
+          constraint: "--constraint='aeson ^>=1.5'"
         - ghc: latest
           cabal: latest
           constraint: "--constraint='aeson ^>=1.5'"
