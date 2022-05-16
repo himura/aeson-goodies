@@ -20,7 +20,10 @@ jobs:
         constraint:
         - "--constraint='aeson ==2.0.*'"
         - "--constraint='aeson ^>=1.5'"
-
+        exclude:
+        - ghc: latest
+          cabal: latest
+          constraint: "--constraint='aeson ^>=1.5'"
     steps:
     - uses: actions/checkout@v2
     - uses: haskell/actions/setup@v1
