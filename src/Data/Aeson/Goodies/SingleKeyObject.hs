@@ -49,7 +49,11 @@ newtype SingleKeyObject (s :: Symbol) a =
     deriving (Eq, Foldable, Functor, Generic, Generic1, Show, Traversable)
 
 instance KnownSymbol s => FromJSON1 (SingleKeyObject s) where
+#if MIN_VERSION_aeson(2,2,0)
+    liftParseJSON _o p _ =
+#else
     liftParseJSON p _ =
+#endif
         withObject ("SingleKeyObject \"" ++ keyStr ++ "\"") $ \obj -> SingleKeyObject <$> (obj .: key >>= p)
       where
         keyStr = symbolVal (Proxy :: Proxy s)
@@ -59,10 +63,20 @@ instance (KnownSymbol s, FromJSON a) => FromJSON (SingleKeyObject s a) where
     parseJSON = parseJSON1
 
 instance KnownSymbol s => ToJSON1 (SingleKeyObject s) where
-    liftToJSON to' _ (SingleKeyObject a) = object [key .= to' a]
+#if MIN_VERSION_aeson(2,2,0)
+    liftToJSON _o to' _ (SingleKeyObject a) =
+#else
+    liftToJSON to' _ (SingleKeyObject a) =
+#endif
+        object [key .= to' a]
       where
         key = keyFromSymbol (Proxy :: Proxy s)
-    liftToEncoding to' _ (SingleKeyObject a) = pairs (pair key $ to' a)
+#if MIN_VERSION_aeson(2,2,0)
+    liftToEncoding _o to' _ (SingleKeyObject a) =
+#else
+    liftToEncoding _o to' _ (SingleKeyObject a) =
+#endif
+        pairs (pair key $ to' a)
       where
         key = keyFromSymbol (Proxy :: Proxy s)
 
